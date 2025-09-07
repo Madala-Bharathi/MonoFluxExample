@@ -103,4 +103,119 @@ class MonoFluxOperationsTest {
                 .expectNext("fallback")
                 .verifyComplete();
     }
+
+    @Test
+    void distinctExampleTest(){
+        StepVerifier.create(monoFluxOperations.distinctExample())
+                .expectNext(1,2,3)
+                .verifyComplete();
+    }
+
+    @Test
+    void takeExampleTest(){
+        StepVerifier.create(monoFluxOperations.takeExample())
+                .expectNext(1,2,3)
+                .verifyComplete();
+    }
+
+    @Test
+    void skipExample(){
+        StepVerifier.create(monoFluxOperations.skipExample())
+                .expectNext(4,5,6,7,8,9,10)
+                .verifyComplete();
+    }
+
+    @Test
+    void skipStringExampleTest(){
+        StepVerifier.create(monoFluxOperations.skipStringExample())
+                .expectNext("Cranberry","Dates")
+                .verifyComplete();
+    }
+
+    @Test
+    void takeWhileExampleTest(){
+        StepVerifier.create(monoFluxOperations.takeWhileExample())
+                .expectNext(1,2,3,4) //fails at first element if the condition is false
+                .verifyComplete();
+    }
+
+    @Test
+    void windowExampleTest(){
+        StepVerifier.create(monoFluxOperations.windowExample())
+                .expectNext(List.of(1,2,3),List.of(4,5,6),List.of(7,8,9), List.of(10))
+                .verifyComplete();
+    }
+
+    @Test
+    void groupByTest(){
+        StepVerifier.create(monoFluxOperations.groupBy())
+                .expectNext("even[2, 4, 6]" ,"odd[1, 3, 5]")
+                .verifyComplete();
+    }
+
+    @Test
+    void mergeWithExampleTest(){
+        StepVerifier.withVirtualTime(monoFluxOperations::mergeWithExample)
+                .thenAwait(Duration.ofMillis(50))
+                .expectNextCount(4)  //order may vary
+                .verifyComplete();
+    }
+
+    @Test
+    void concatWithExampleTest(){
+        StepVerifier.withVirtualTime(monoFluxOperations::concatWithExample)
+                .thenAwait(Duration.ofMillis(50))
+                .expectNext(1,2,3,4)
+                .verifyComplete();
+    }
+
+    @Test
+    void combineLatestExampleTest(){
+        StepVerifier.create(monoFluxOperations.combineLatestExample().log())
+                .expectNext("A1", "B1","C1", "C2", "C3")
+                .verifyComplete();
+    }
+
+    @Test
+    void startWithExampleTest(){
+        StepVerifier.create(monoFluxOperations.startWithExample())
+                .expectNext(0,1,2,3)
+                .verifyComplete();
+    }
+
+    @Test
+    void startLateTest(){
+        StepVerifier.create(monoFluxOperations.startLate().log())
+                .thenAwait(Duration.ofSeconds(1))
+                .expectNext("Delay by 1s")
+                .verifyComplete();
+    }
+
+    @Test
+    void subscribeOnTest(){
+        StepVerifier.create(monoFluxOperations.subscribeOn())
+                .expectNext(2, 4, 6, 8, 10)
+                .verifyComplete();
+    }
+
+    @Test
+    void publishOnTest(){
+        StepVerifier.create(monoFluxOperations.publishOn())
+                .expectNext(3, 5, 7, 9, 11)
+                .verifyComplete();
+    }
+
+    @Test
+    void safeValueTest(){
+        StepVerifier.create(monoFluxOperations.safeValue())
+                .expectNext("Default")
+                .verifyComplete();
+    }
+
+    @Test
+    void dynamicSafeValueTest(){
+        StepVerifier.create(monoFluxOperations.dynamicSafeValue())
+                .expectNext("Resume")
+                .verifyComplete();
+    }
 }
